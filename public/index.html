@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kafu | Red Social</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Playfair+Display:ital,wght@1,900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<!-- APLICACIÓN PRINCIPAL -->
+<div id="app-layout" class="app-layout">
+    <aside class="sidebar">
+        <div class="logo">Kaf<span class="distorted-u">u</span></div>
+
+        <nav class="nav-menu">
+            <button class="nav-item active" data-target="feed-view"><i class="fa-solid fa-house"></i> <span>Inicio</span></button>
+            <button class="nav-item" data-target="explore-view"><i class="fa-solid fa-compass"></i> <span>Explorar</span></button>
+            <button class="nav-item" data-target="following-view"><i class="fa-solid fa-users"></i> <span>Seguidos</span></button>
+            <button class="nav-item" data-target="messages-view"><i class="fa-solid fa-paper-plane"></i> <span>Mensajes DM</span></button>
+            <button class="nav-item" id="open-story-modal"><i class="fa-solid fa-circle-plus"></i> <span>Agregar Story</span></button>
+            <button class="nav-item create-btn" id="open-modal-btn"><i class="fa-solid fa-square-plus"></i> <span>Crear Publicación</span></button>
+            <button class="nav-item" id="my-profile-btn"><i class="fa-solid fa-user"></i> <span>Mi Perfil</span></button>
+        </nav>
+
+        <div class="sidebar-footer">
+            <button class="nav-item" id="open-settings-btn"><i class="fa-solid fa-gear"></i> <span>Configuración</span></button>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <!-- FEED -->
+        <section id="feed-view" class="view-section">
+            <div class="stories-container" id="stories-wrapper"></div>
+            <div id="posts-container" class="feed-posts"></div>
+        </section>
+
+        <!-- EXPLORAR -->
+        <section id="explore-view" class="view-section hidden">
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="search-input" placeholder="Buscar publicaciones...">
+            </div>
+            <h3 class="section-title">Publicaciones Populares</h3>
+            <div id="explore-grid" class="explore-posts-grid"></div>
+        </section>
+
+        <!-- SEGUIDOS -->
+        <section id="following-view" class="view-section hidden">
+            <h2 class="view-title">Publicaciones de Seguidos</h2>
+            <div id="following-posts-container" class="feed-posts"></div>
+        </section>
+
+        <!-- MENSAJES DM -->
+        <section id="messages-view" class="view-section hidden">
+            <div class="dm-container">
+                <div class="dm-sidebar">
+                    <h3>Mensajes</h3>
+                </div>
+                <div class="dm-chat">
+                    <div class="chat-header"><span>@carlos_dev</span></div>
+                    <div class="chat-messages" id="chat-messages-box"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PERFIL -->
+        <section id="profile-view" class="view-section hidden">
+            <div class="ig-profile-container">
+                <div class="ig-profile-top">
+                    <div class="ig-avatar-ring">
+                        <img id="profile-avatar" src="" alt="Avatar">
+                    </div>
+                    <div class="ig-profile-info-col">
+                        <div class="ig-username-row">
+                            <h2 id="profile-username">@usuario</h2>
+                            <button id="profile-action-btn" class="ig-btn-edit">Editar Perfil</button>
+                        </div>
+                        <div class="ig-stats-row">
+                            <span><strong id="profile-posts-count">0</strong> Publicaciones</span>
+                            <span><strong id="profile-followers-count">1,210</strong> Seguidores</span>
+                            <span><strong id="profile-following-count">183</strong> A seguir</span>
+                        </div>
+                        <div class="ig-bio-section">
+                            <h4 id="profile-name"></h4>
+                            <p id="profile-bio"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="ig-tabs">
+                    <div class="ig-tab active"><i class="fa-solid fa-table-cells"><span>PUBLICACIONES</span></i></div>
+                </div>
+                <div id="user-posts-grid" class="ig-posts-grid"></div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<!-- MODAL CONFIGURACIÓN -->
+<div id="settings-modal" class="modal hidden">
+    <div class="modal-content settings-box">
+        <div class="modal-header">
+            <h3>Configuración</h3>
+            <button class="close-modal" id="close-settings-modal">&times;</button>
+        </div>
+        <div class="settings-list">
+            <div class="setting-item"><i class="fa-solid fa-lock"></i> Privacidad y Seguridad</div>
+            <div class="setting-item"><i class="fa-solid fa-bell"></i> Notificaciones</div>
+            <div class="setting-item"><i class="fa-solid fa-moon"></i> Apariencia</div>
+            <div class="setting-item logout-link" id="logout-btn"><i class="fa-solid fa-circle-info"></i> Acerca de Kafu</div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL PUBLICAR -->
+<div id="post-modal" class="modal hidden">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Nueva Publicación</h3>
+            <button class="close-modal" id="close-modal-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+            <textarea id="post-caption" placeholder="Escribe un pie de foto..."></textarea>
+
+            <div style="display: flex; flex-direction: column; gap: 0.3rem;">
+                <label style="font-size: 0.85rem; color: var(--text-muted);">Sube una foto desde tu galería:</label>
+                <input type="file" id="post-file-input" accept="image/*" style="padding: 0.5rem; font-size: 0.85rem; background: var(--bg-color); border: 1px solid var(--purple-main); color: #fff; border-radius: 8px;">
+            </div>
+
+            <div style="text-align: center; font-size: 0.8rem; color: var(--text-muted);">- O -</div>
+
+            <input type="text" id="post-image-url" placeholder="O pega la URL de la imagen...">
+
+            <button id="publish-btn" class="action-btn">Publicar</button>
+        </div>
+    </div>
+</div>
+
+<script src="/app.js"></script>
+</body>
+</html>
